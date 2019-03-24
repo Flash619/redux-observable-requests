@@ -1,0 +1,43 @@
+{
+  "name": "redux-observable-requests",
+  "version": "1.0.0",
+  "description": "Subscribe to redux request actions, handle api requests, return responses.",
+  "main": "/lib/index.js",
+  "types": "/lib/index.d.ts",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "prepublishOnly": "npm test && npm run lint",
+    "prepare": "npm run build",
+    "build": "tsc",
+    "test": "jest --config jestconfig.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Flash619/redux-observable-requests.git"
+  },
+  "keywords": [
+    "observable",
+    "redux",
+    "api",
+    "request"
+  ],
+  "author": "Flash619",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Flash619/redux-observable-requests/issues"
+  },
+  "homepage": "https://github.com/Flash619/redux-observable-requests#readme",
+  "devDependencies": {
+    "@types/jest": "^24.0.11",
+    "jest": "^24.5.0",
+    "ts-jest": "^24.0.0",
+    "typescript": "^3.3.4000"
+  },
+  "dependencies": {
+    "redux": "^4.0.1",
+    "redux-observable": "^1.0.0",
+    "rxjs": "^6.4.0"
+  }
+}
