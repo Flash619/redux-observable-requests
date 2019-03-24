@@ -32,13 +32,13 @@ export const generateAjaxRequest = (requestAction: RequestAction) => {
 };
 
 export const generateRequestResponseAction = (requestAction: RequestAction, response: AjaxResponse) => {
-    let action : ResponseAction = {
-        type: (isErrorStatus(response.status))? error(requestAction.type) : success(requestAction.type)
-    } as ResponseAction
+    const type = (isErrorStatus(response.status))? error(requestAction.type) : success(requestAction.type)
+    let action = {} as ResponseAction
     if (isFSARequest(requestAction)) {
-        action.payload = {response}
+        // @ts-ignore We need to follow FSA.
+        action = {payload:{...response}, type}
     } else {
-        action.response = response
+        action = {...response, type}
     }
     action.meta = requestAction.meta;
     return action

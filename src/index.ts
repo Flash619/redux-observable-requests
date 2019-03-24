@@ -18,11 +18,8 @@ export interface RequestAction {
         request?:AjaxRequest
     }
 }
-export interface ResponseAction {
+export interface ResponseAction extends AjaxResponse{
     type: string
-    response?: AjaxResponse|AjaxError
     meta?: any
-    payload?:{
-        response?:AjaxResponse|AjaxError
-    }
+    payload?: AjaxResponse
 }

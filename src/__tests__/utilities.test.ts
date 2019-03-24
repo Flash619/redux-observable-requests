@@ -74,6 +74,7 @@ test('isOkStatus',() => {
 test('generateRequestResponseAction FSA 401 (Error)',() => {
     const response = {} as AjaxResponse;
     response.status = 401;
+    response.response = {};
     const request = {} as RequestAction;
     request.type = 'TEST';
     request.meta = 'META_TEST';
@@ -87,13 +88,14 @@ test('generateRequestResponseAction FSA 401 (Error)',() => {
     // @ts-ignore
     expect(action.payload.response != null).toBe(true);
     // @ts-ignore
-    expect(action.payload.response.status).toBe(401);
+    expect(action.payload.status).toBe(401);
     expect(action.meta).toBe('META_TEST');
 });
 
 test('generateRequestResponseAction Non FSA 203 (Success)',() => {
     const response = {} as AjaxResponse;
     response.status = 203;
+    response.response = {};
     const request = {} as RequestAction;
     request.type = 'TEST';
     request.meta = 'META_TEST';
@@ -103,7 +105,7 @@ test('generateRequestResponseAction Non FSA 203 (Success)',() => {
     expect(action.type).toBe('TEST_SUCCESS');
     expect(action.response != null).toBe(true);
     // @ts-ignore
-    expect(action.response.status).toBe(203);
+    expect(action.status).toBe(203);
     expect(action.meta).toBe('META_TEST');
 });
 
