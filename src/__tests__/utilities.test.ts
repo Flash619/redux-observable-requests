@@ -35,12 +35,24 @@ test('isSuccess',() => {
     expect(utilities.isSuccess(utilities.success('TEST'))).toBe(true)
 });
 
+test('isSuccess',() => {
+    expect(utilities.isSuccess(utilities.abort('TEST'))).toBe(false)
+});
+
 test('isError',() => {
     expect(utilities.isError(utilities.error('TEST'))).toBe(true)
 });
 
+test('isError',() => {
+    expect(utilities.isError(utilities.abort('TEST'))).toBe(false)
+});
+
 test('isAbort',() => {
     expect(utilities.isAbort(utilities.abort('TEST'))).toBe(true)
+});
+
+test('isAbort',() => {
+    expect(utilities.isAbort(utilities.success('TEST'))).toBe(false)
 });
 
 test('isRequest Non FSA',() => {
@@ -67,6 +79,23 @@ test('isOkStatus',() => {
     expect(utilities.isOkStatus(203)).toBe(true)
 });
 
+test('isRequest',() => {
+    expect(utilities.isRequest({
+        type: 'TEST',
+        request: {}
+    })).toBe(true)
+});
+
+test('isRequest FSA',() => {
+    expect(utilities.isRequest({
+        type: 'TEST',
+        payload: {
+            request: {}
+        }
+    })).toBe(true)
+});
+
+
 //-----------------------------------------------------------------
 // Epic Utilities
 //-----------------------------------------------------------------
@@ -74,10 +103,9 @@ test('isOkStatus',() => {
 test('generateRequestResponseAction FSA 401 (Error)',() => {
     const response = {} as AjaxResponse;
     response.status = 401;
-    response.response = {};
     const request = {} as RequestAction;
     request.type = 'TEST';
-    request.meta = 'META_TEST';
+    request.meta = {test:'META_TEST'};
     request.payload = {
         request: {} as AjaxRequest
     };
@@ -88,8 +116,13 @@ test('generateRequestResponseAction FSA 401 (Error)',() => {
     // @ts-ignore
     expect(action.payload.response != null).toBe(true);
     // @ts-ignore
-    expect(action.payload.status).toBe(401);
-    expect(action.meta).toBe('META_TEST');
+    expect(action.payload.response.status).toBe(401);
+    if (action.meta == null || action.meta.test == null) {
+        fail('Meta was not passed through to response action.')
+    } else {
+        expect(action.meta.test).toBe('META_TEST');
+    }
+    expect(JSON.stringify(action.meta.originalAction)).toBe(JSON.stringify(request));
 });
 
 test('generateRequestResponseAction Non FSA 203 (Success)',() => {
@@ -98,27 +131,30 @@ test('generateRequestResponseAction Non FSA 203 (Success)',() => {
     response.response = {};
     const request = {} as RequestAction;
     request.type = 'TEST';
-    request.meta = 'META_TEST';
+    request.meta = {test:'META_TEST'};
     request.request = {} as AjaxRequest;
     const action = generateRequestResponseAction(request, response);
     expect(isSuccess(action.type)).toBe(true);
     expect(action.type).toBe('TEST_SUCCESS');
     expect(action.response != null).toBe(true);
     // @ts-ignore
-    expect(action.status).toBe(203);
-    expect(action.meta).toBe('META_TEST');
+    expect(action.response.status).toBe(203);
+    if (action.meta == null || action.meta.test == null) {
+        fail('Meta was not passed through to response action.')
+    } else {
+        expect(action.meta.test).toBe('META_TEST');
+    }
+    expect(JSON.stringify(action.meta.originalAction)).toBe(JSON.stringify(request));
 });
 
 test('generateRequestAbortAction',() => {
     let request = {} as RequestAction;
     request.type = 'TEST';
-    request.meta = 'META_TEST';
+    request.meta = {test:'META_TEST'};
     request.payload = {
         request: {} as AjaxRequest
     };
     let action = generateRequestAbortAction(request);
+    expect(JSON.stringify(action.meta.originalAction)).toBe(JSON.stringify(request));
     expect(isAbort(action.type)).toBe(true);
-    delete action.type
-    delete request.type
-    expect(JSON.stringify(action)).toBe(JSON.stringify(request))
 });

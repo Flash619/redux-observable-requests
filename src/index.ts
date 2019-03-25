@@ -2,24 +2,24 @@ import {AjaxError, AjaxRequest, AjaxResponse} from "rxjs/ajax";
 
 export * from './utilities'
 export * from './epics'
-export type Method =
-    'post' |
-    'get' |
-    'patch' |
-    'put' |
-    'update' |
-    'head' |
-    'delete'
+
 export interface RequestAction {
     type: string
     request?: AjaxRequest
-    meta?: any
+    meta?: {[key:string]:any}
     payload?:{
         request?:AjaxRequest
     }
 }
-export interface ResponseAction extends AjaxResponse{
+
+export interface ResponseAction{
     type: string
-    meta?: any
-    payload?: AjaxResponse
+    meta: {
+        [key:string]:any
+        originalAction: RequestAction
+    }
+    response?: AjaxResponse|AjaxError
+    payload?: {
+        response: AjaxResponse|AjaxError
+    }
 }
