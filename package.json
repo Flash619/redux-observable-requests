@@ -2,8 +2,8 @@
   "name": "redux-observable-requests",
   "version": "1.0.0",
   "description": "Subscribe to redux request actions, handle api requests, return responses.",
-  "main": "/lib/index.js",
-  "types": "/lib/index.d.ts",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
   "files": [
     "lib"
   ],

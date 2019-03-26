@@ -14,7 +14,7 @@ A lightweight minimalistic approach to AJAX requests using `rxjs` and `redux-obs
 
 ### Motivation
 
-Redux Observable Requests was created to handle AJAX requests, and dispatch success, error, and abort actions respectively. In the past I had used `redux-saga-requests` and was inspired by it's simplicity. Unfortunately, I could not find a similar library for `redux-observable`. I decided to make a lightweight library focused on handling AJAX requests using `redux-observable` while trying to maintain the same action structure and tool-set of `redux-saga-requests` to minimize any potential refactor.
+Redux Observable Requests was created to handle AJAX requests, and dispatch success, error, and abort actions respectively. In the past I had used `redux-saga-requests` and was inspired by it's simplicity. Unfortunately, I could not find a similar library for `redux-observable`. I decided to make a lightweight library focused on handling AJAX requests using `redux-observable` while trying to maintain the same action structure and tool-set of `redux-saga-requests` to minimize any potential refactor. `redux-observable-requests` is not an exact copy of `redux-saga-requests` though most parts work very similarly, they likely have small variances. For this reason it is recommended to at least brush up on some documentation before doing anything crazy. ;) 
 
 Where `redux-saga-requests` allows for multiple request libraries to be used, `redux-observable-requests` is designed to use as many internal `rxjs` components as possible. For this reason `redux-observable-requests` only uses the built in `rxjs/ajax` class when handing AJAX requests.
 
@@ -29,13 +29,46 @@ npm install --save redux-observable-requests
 #### Implementation
 
 ```javascript
-// Import the custom request subscriber.
-import {requestSubscriber} from 'redux-observable-requests'
+// Import the custom request subscriber generator.
+import {generateRequestSubscriber} from 'redux-observable-requests'
 
 // Add the request subscriber to your root epic.
 combineEpics(
     rootEpic,
-    requestSubscriber
+    generateRequestSubscriber()
+);
+```
+
+Optionally, you can pass custom callback functions to the request subscriber generator to alter actions before they are dispatched, dispatch other actions, or run side effects.
+
+```javascript
+// Import the custom request subscriber generator.
+import {generateRequestSubscriber} from 'redux-observable-requests'
+
+const handleSuccessAction = (originalAction, responseAction) => {
+    // Normalize responseAction.response, log console data, etc...
+    return responseAction // Callback functions must return an action. This action is passed along to dispatch.
+}
+
+const handleAbortAction = (originalAction, responseAction) => {
+    console.error(`Action ${originalAction.type} aborted.`);
+    return responseAction
+}
+
+const handleRequestAction = (requestAction) => {
+    // Add authorization tokens, log activity, dispatch side effects, etc...
+    return requestAction
+}
+
+
+// Add the request subscriber to your root epic.
+combineEpics(
+    rootEpic,
+    generateRequestSubscriber({
+        onSuccess: handleSuccessAction,
+        onAbort: handleAbortAction,
+        onRequest: handleRequestAction
+    })
 );
 ```
 
@@ -110,6 +143,32 @@ const abortedActions = (state: any[], action: ResponseAction) => {
             return [...state, action.meta.originalAction]
     }
 }
+```
+
+```javascript
+const handleSuccessAction = (originalAction: RequestAction, responseAction: ResponseAction): ResponseAction => {
+    // Normalize responseAction.response, log console data, etc...
+    return responseAction
+}
+
+const handleAbortAction = (originalAction: RequestAction, responseAction: ResponseAction): ResponseAction => {
+    console.error(`Action ${originalAction.type} aborted.`);
+    return responseAction
+}
+
+const handleRequestAction = (requestAction: RequestAction): ResponseAction => {
+    // Add authorization tokens, log activity, dispatch side effects, etc...
+    return requestAction
+}
+
+combineEpics(
+    rootEpic,
+    generateRequestSubscriber({
+        onSuccess: handleSuccessAction,
+        onAbort: handleAbortAction,
+        onRequest: handleRequestAction
+    })
+);
 ```
 
 ### Contributing

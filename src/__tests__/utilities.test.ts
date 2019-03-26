@@ -114,9 +114,7 @@ test('generateRequestResponseAction FSA 401 (Error)',() => {
     expect(action.type).toBe('TEST_ERROR');
     expect(action.payload != null).toBe(true);
     // @ts-ignore
-    expect(action.payload.response != null).toBe(true);
-    // @ts-ignore
-    expect(action.payload.response.status).toBe(401);
+    expect(action.meta.ajaxResponse.status).toBe(401);
     if (action.meta == null || action.meta.test == null) {
         fail('Meta was not passed through to response action.')
     } else {
@@ -138,7 +136,7 @@ test('generateRequestResponseAction Non FSA 203 (Success)',() => {
     expect(action.type).toBe('TEST_SUCCESS');
     expect(action.response != null).toBe(true);
     // @ts-ignore
-    expect(action.response.status).toBe(203);
+    expect(action.meta.ajaxResponse.status).toBe(203);
     if (action.meta == null || action.meta.test == null) {
         fail('Meta was not passed through to response action.')
     } else {

@@ -33,26 +33,25 @@ export const generateAjaxRequest = (requestAction: RequestAction) => {
 
 export const generateRequestResponseAction = (requestAction: RequestAction, response: AjaxResponse) => {
     const type = (isErrorStatus(response.status)) ? error(requestAction.type) : success(requestAction.type);
-    let action = {} as ResponseAction;
+    let responseAction = {
+        type,
+        meta: {
+            ...requestAction.meta,
+            originalAction: {...requestAction},
+            ajaxResponse: {...response}
+        }
+    } as ResponseAction;
     if (isFSARequest(requestAction)) {
-        // @ts-ignore We need to follow FSA.
-        action =
-            {
-                payload: {response: {...response}},
-                type
-            }
+        responseAction.payload = {
+            response: response.response
+        }
     } else {
-        // @ts-ignore We add meta after this if statement.
-        action = {response:{...response}, type}
+        responseAction.response = response.response
     }
-    action.meta = {
-        ...requestAction.meta,
-        originalAction: {...requestAction}
-    };
-    return action
+    return responseAction
 };
 
-export const generateRequestAbortAction = (requestAction: RequestAction) => {
+export const generateRequestAbortAction = (requestAction: RequestAction): ResponseAction => {
     return {
         type: abort(requestAction.type),
         meta: {
