@@ -5,9 +5,9 @@ export * from './epics'
 
 export interface RequestSubscriberOptions {
    onRequest?: (requestAction: RequestAction) => RequestAction
-   onSuccess?: (requestAction: RequestAction, responseAction: ResponseAction) => ResponseAction
-   onError?: (requestAction: RequestAction, responseAction: ResponseAction) => ResponseAction
-   onAbort?: (requestAction: RequestAction, responseAction: ResponseAction) => ResponseAction
+   onSuccess?: (responseAction: ResponseAction) => ResponseAction
+   onError?: (responseAction: ResponseAction) => ResponseAction
+   onAbort?: (responseAction: ResponseAction) => ResponseAction
 }
 
 export interface RequestAction {

@@ -33,7 +33,7 @@ export const generateRequestSubscriber = (options?: RequestSubscriberOptions) =>
     const handleAbort = (action: RequestAction) => {
         let nextAction = generateRequestAbortAction(action);
         if (options != null && options.onAbort != null) {
-            nextAction = options.onAbort(action, nextAction)
+            nextAction = options.onAbort(nextAction)
         }
         return nextAction
     };
@@ -41,7 +41,7 @@ export const generateRequestSubscriber = (options?: RequestSubscriberOptions) =>
     const handleSuccess = (action: RequestAction, response: AjaxResponse) => {
         let nextAction = generateRequestResponseAction(action, response);
         if (options != null && options.onSuccess != null) {
-            nextAction = options.onSuccess(action, nextAction)
+            nextAction = options.onSuccess(nextAction)
         }
         return nextAction
     };
@@ -49,7 +49,7 @@ export const generateRequestSubscriber = (options?: RequestSubscriberOptions) =>
     const handleError = (action: RequestAction, error: AjaxResponse) => {
         let nextAction = generateRequestResponseAction(action, error);
         if (options != null && options.onError != null) {
-            nextAction = options.onError(action, nextAction)
+            nextAction = options.onError(nextAction)
         }
         return nextAction
     };
