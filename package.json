@@ -8,7 +8,7 @@
     "lib"
   ],
   "scripts": {
-    "prepublishOnly": "npm test && npm run lint",
+    "prepublishOnly": "npm test",
     "prepare": "npm run build",
     "build": "tsc",
     "test": "jest --config jestconfig.json"
