@@ -92,6 +92,10 @@ export const getUser = (userId) => ({
 
 Responding actions will be either of error, success, or abort. Action types are appended to the original action type. To help streamline implementation helper functions have been provided.
 
+Any properties in the original actions `meta` property will be copied to the responding actions `meta` property.
+
+`AjaxResponse.response` Is mapped to `ResponseAction.response` and contains only the web servers response data, whereas the full `AjaxResponse` can be found under `ResponseAction.meta.ajaxResponse`. For more information on structure, refer to `index.ts` which shows the type interfaces for response actions.
+
 ```javascript
 // Import the success helper function.
 import {success} from 'redux-observable-requests'
@@ -99,7 +103,7 @@ import {success} from 'redux-observable-requests'
 const users = (state: [], action) => {
     switch(action.type) {
         case success('GET_USER'):
-            return [...state, action.response.response]
+            return [...state, action.response]
     }
 }
 ```
