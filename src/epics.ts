@@ -43,6 +43,7 @@ export const generateRequestSubscriber = (options?: RequestSubscriberOptions) =>
         if (options != null && options.onSuccess != null) {
             nextAction = options.onSuccess(nextAction)
         }
+        removeActiveAction(action.type);
         return nextAction
     };
 
@@ -51,6 +52,7 @@ export const generateRequestSubscriber = (options?: RequestSubscriberOptions) =>
         if (options != null && options.onError != null) {
             nextAction = options.onError(nextAction)
         }
+        removeActiveAction(action.type);
         return nextAction
     };
 
@@ -65,7 +67,6 @@ export const generateRequestSubscriber = (options?: RequestSubscriberOptions) =>
                     addActiveAction(action.type);
                     action = handleRequest(action);
                     return generateAjaxRequest(action).pipe(
-                        tap(response => removeActiveAction(action.type)),
                         map(response => handleSuccess(action, response)),
                         catchError(error => of(handleError(action, error)))
                     )
